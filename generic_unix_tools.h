@@ -1,6 +1,13 @@
 #ifndef generic_unix_tools_H_
 #define generic_unix_tools_H_
 
+/*A generic placeholder linked list, used by
+ * freeLinkedListGen()*/
+typedef struct agenericLinkedList{
+    char b;
+    struct agenericLinkedList *next;
+}genL;
+
 //Count nr of lines in file
 extern int countLines(char *fileName);
 

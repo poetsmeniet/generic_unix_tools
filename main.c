@@ -14,6 +14,7 @@ int main(void){
     aL *myList = malloc(sizeof(aL));
     myList->a = 10;
     myList->b = 'c';
+    myList->next = NULL;
 
     //add another
     myList->next = malloc(sizeof(aL));
@@ -22,6 +23,9 @@ int main(void){
     myList->next->next = NULL;
     
 
+    //freeLinkedListGen(myList);
+
+    //freeLinkedListGen((void *)myList);
     freeLinkedListGen(myList);
     return 0;
 }
