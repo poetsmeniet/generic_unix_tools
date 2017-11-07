@@ -5,15 +5,25 @@
 #include <sys/types.h>
 #include "generic_unix_tools.h"
 
+    //temp:
+    typedef struct agenericLinkedList{
+        int a;
+        char b;
+        struct agenericLinkedList *next;
+    }aL;
+
 //Free a linked list
 extern void freeLinkedListGen(void* targetList){
-    
-    if(targetList->next == NULL){
-        free(targetList);
+    aL *tL = targetList;
+
+    if(tL->next == NULL){
+        printf("Freeing tL\n");
+        free(tL);
     }else{
-        void *head = targetList;
-        void *curr;
+        aL *head = tL;
+        aL *curr;
         while ((curr = head) != NULL) { // set curr to head, stop if list empty.
+            printf("Freeing next..\n");
             head = head->next;          // advance head to next element.
             free (curr);                // delete saved pointer.
         }
