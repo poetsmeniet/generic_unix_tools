@@ -10,11 +10,18 @@ int main(void){
         struct agenericLinkedList *next;
     }aL;
 
+    //Start list
     aL *myList = malloc(sizeof(aL));
     myList->a = 10;
     myList->b = 'c';
-    myList->next = NULL;
 
-    freeLinkedListGen(&myList);
+    //add another
+    myList->next = malloc(sizeof(aL));
+    myList->next->a = 11;
+    myList->next->b = 'd';
+    myList->next->next = NULL;
+    
+
+    freeLinkedListGen(myList);
     return 0;
 }
