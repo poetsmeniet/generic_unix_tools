@@ -4,7 +4,8 @@
 /*A generic placeholder linked list, used by
  * freeLinkedListGen()*/
 typedef struct agenericLinkedList{
-    char b;
+    //int a;
+    char chanName[100];
     struct agenericLinkedList *next;
 }genL;
 
