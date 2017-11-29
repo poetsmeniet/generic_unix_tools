@@ -3,7 +3,18 @@
 #include <regex.h>
 #include <string.h>
 #include <sys/types.h>
+#include <signal.h>
 #include "generic_unix_tools.h"
+
+/* This function makes is a bit easier to catch CTR-C keyb event 
+ * handler is the address to function that will handle the event */
+void catchSIGINT(void *handler)
+{
+    //Define sigaction struct and pass to sigaction
+    struct sigaction act;
+    act.sa_handler = handler;
+    sigaction(SIGINT,  &act, NULL);
+}
 
 /*Free a linked list
  * Will work if the "genL" struct type matches your struct in size 
@@ -16,9 +27,9 @@ extern void freeLinkedListGen(void* targetList){
     }else{
         genL *head = tL;
         genL *curr;
-        while ((curr = head) != NULL) { //Set curr to head, stop if list empty.
-            head = head->next;          //Advance head to next element.
-            free (curr);                //Free saved pointer.
+        while ((curr = head) != NULL) { 
+            head = head->next;          
+            free (curr);                
         }
     }
 }
