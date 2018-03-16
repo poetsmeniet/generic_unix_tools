@@ -3,23 +3,13 @@
 #include <regex.h>
 #include <string.h>
 #include <sys/types.h>
-#include <signal.h>
 #include "generic_unix_tools.h"
-
-/* This function makes is a bit easier to catch CTR-C keyb event 
- * handler is the address to function that will handle the event */
-void catchSIGINT(void *handler)
-{
-    //Define sigaction struct and pass to sigaction
-    struct sigaction act;
-    act.sa_handler = handler;
-    sigaction(SIGINT,  &act, NULL);
-}
 
 /*Free a linked list
  * Will work if the "genL" struct type matches your struct in size 
  * Customize if needed or adjust genL struct */
-extern void freeLinkedListGen(void* targetList){
+extern void freeLinkedListGen(void* targetList)
+{
     genL *tL = (genL *)targetList; //Explicit
 
     if(tL->next == NULL){ //Only one node, the first
@@ -27,15 +17,16 @@ extern void freeLinkedListGen(void* targetList){
     }else{
         genL *head = tL;
         genL *curr;
-        while ((curr = head) != NULL) { 
-            head = head->next;          
-            free (curr);                
+        while ((curr = head) != NULL) { //Set curr to head, stop if list empty.
+            head = head->next;          //Advance head to next element.
+            free (curr);                //Free saved pointer.
         }
     }
 }
 
-//Count nr of lines in file
-extern int countLines(char *fileName){
+/* Count nr of lines in file */
+extern int countLines(char *fileName)
+{
     FILE *fp;
     int lineCnt = 0;
     fp = fopen(fileName, "r");
@@ -52,7 +43,8 @@ extern int countLines(char *fileName){
 
 /* Returns true or false if regex matches string
 Usage: regexMatch("thomas$", "this is a test string mr thomas");*/
-extern int regexMatch(char *regex, char *string){
+extern int regexMatch(char *regex, char *string)
+{
     //Check lengths
     if(strlen(regex) == 0 || strlen(string) == 0){
         printf("Regex or string empty\n");
@@ -67,13 +59,31 @@ extern int regexMatch(char *regex, char *string){
         return 1;
     }
 
-    rc = regexec(&preg, string, 0, 0, 0);
+    int nmatch = 0;
+    regmatch_t *pmatch = NULL;
+    rc = regexec(&preg, string, nmatch, pmatch, 0);
 
     if(rc == 0){
-        regfree(&preg);
+        //printf("Match found, regexec returns %d, nmatch: %d\n", rc, nmatch);
         return 0;
     }else{
-        regfree(&preg);
+        //printf("Match not found, regexec returns %d, nmatch: %d\n", rc, nmatch);
         return 1;
     }
+    return 1;
+}
+
+/* Inline malloc wrapper 
+ * Using inline 'might' improve performance
+ * but I could not verify that because of compiler optimization
+ * This function will save a lot of typing in malloc heavy
+ * code */
+inline void *tryMalloc(size_t memSz)
+{
+    void *p= malloc(memSz);
+    if(!p && memSz){
+        printf("Unable to allocate memory, exiting");
+        exit(EXIT_FAILURE);
+    }
+    return p;
 }
